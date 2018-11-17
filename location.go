@@ -8,14 +8,19 @@ import (
 	"github.com/eternal-flame-AD/go-termux/internal/chanbuf"
 )
 
+// LocationProvider enumerates the location sources provided by the device
 type LocationProvider string
 
 const (
-	GPS     LocationProvider = "gps"
+	// GPS acquire location with GPS
+	GPS LocationProvider = "gps"
+	// Network acquire location using current network
 	Network LocationProvider = "network"
+	// Passive acquire location using passive methods
 	Passive LocationProvider = "passive"
 )
 
+// LocationRecord represents a location record provided by the device
 type LocationRecord struct {
 	Latitude  float64 `json:"latitude"`
 	Longitude float64 `json:"longitude"`
@@ -44,20 +49,25 @@ func location(ctx context.Context, t string, provider LocationProvider) (*Locati
 	return r, nil
 }
 
+// LastLocation acquires the last known location of the device
 func LastLocation(ctx context.Context, provider LocationProvider) (*LocationRecord, error) {
 	return location(ctx, "last", provider)
 }
 
+// Location acquires the current location of the device
 func Location(ctx context.Context, provider LocationProvider) (*LocationRecord, error) {
 	return location(ctx, "once", provider)
 }
 
+// UpdatedLocation acquires the real-time location of the device from a channel
 func UpdatedLocation(ctx context.Context, provider LocationProvider) <-chan struct {
 	Location *LocationRecord
 	Error    error
 } {
 	response := make(chan []byte)
-	go execContext(ctx, nil, chanbuf.BufToChan{response}, "Location", map[string]interface{}{
+	go execContext(ctx, nil, chanbuf.BufToChan{
+		C: response,
+	}, "Location", map[string]interface{}{
 		"provider": string(provider),
 		"request":  "updates",
 	}, "")

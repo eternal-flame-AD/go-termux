@@ -5,12 +5,14 @@ import (
 	"encoding/json"
 )
 
+// AudioStreamState represents the volume info of an audio stream
 type AudioStreamState struct {
 	Name      string `json:"stream"`
 	Volume    int    `json:"volume"`
 	MaxVolume int    `json:"max_volume"`
 }
 
+// AudioStreams acquires all audio stream volume info from the device
 func AudioStreams() ([]AudioStreamState, error) {
 	buf := bytes.NewBuffer([]byte{})
 	exec(nil, buf, "Volume", nil, "")
@@ -26,6 +28,7 @@ func AudioStreams() ([]AudioStreamState, error) {
 	return l, nil
 }
 
+// AudioStreamVolume sets the volume of a given audio stream name
 func AudioStreamVolume(name string, volume int) error {
 	buf := bytes.NewBuffer([]byte{})
 	exec(nil, buf, "Volume", map[string]interface{}{

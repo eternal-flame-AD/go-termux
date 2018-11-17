@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 )
 
+// BatteryStatusResponse represents the current battery status
 type BatteryStatusResponse struct {
 	Health      string  `json:"health"`
 	Percentage  int     `json:"percentage"`
@@ -13,6 +14,7 @@ type BatteryStatusResponse struct {
 	Temperature float64 `json:"temperature"`
 }
 
+// BatteryStatus acquires the corrent audio info
 func BatteryStatus() (*BatteryStatusResponse, error) {
 	buf := bytes.NewBuffer([]byte{})
 	exec(nil, buf, "BatteryStatus", nil, "")

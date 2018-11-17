@@ -10,6 +10,7 @@ import (
 	_io "github.com/eternal-flame-AD/go-termux/internal/io"
 )
 
+// GlobalTimeout The global timeout to non-persistent and non-time-consumingn operations
 var GlobalTimeout = 15 * time.Second
 
 func tryCloseReader(c io.Reader) {

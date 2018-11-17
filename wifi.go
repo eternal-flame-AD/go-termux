@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 )
 
+// WifiEnable sets the current enabled state of the device wifi
 func WifiEnable(enabled bool) error {
 	buf := bytes.NewBuffer([]byte{})
 	exec(nil, buf, "WifiEnable", map[string]interface{}{
@@ -14,6 +15,7 @@ func WifiEnable(enabled bool) error {
 	return checkErr(res)
 }
 
+// WifiConnection represents the current connection info of the device wifi interface
 type WifiConnection struct {
 	BSSID           string `json:"bssid"`
 	FreqMHZ         int    `json:"frequency_mhz"`
@@ -27,6 +29,7 @@ type WifiConnection struct {
 	SupplicantState string `json:"supplicant_state"`
 }
 
+// WifiConnectionState returns the current wifi connection state of the device
 func WifiConnectionState() (*WifiConnection, error) {
 	buf := bytes.NewBuffer([]byte{})
 	exec(nil, buf, "WifiConnectionInfo", nil, "")
@@ -41,6 +44,7 @@ func WifiConnectionState() (*WifiConnection, error) {
 	return ret, nil
 }
 
+// WifiAP represents a discovered AP in a wifi scan
 type WifiAP struct {
 	BSSID     string `json:"bssid"`
 	FreqMHZ   int    `json:"frequency_mhz"`
@@ -52,6 +56,7 @@ type WifiAP struct {
 	ChannelBandwidth string `json:"channel_bandwidth_mhz"`
 }
 
+// WifiScan scans for available networks
 func WifiScan() ([]WifiAP, error) {
 	buf := bytes.NewBuffer([]byte{})
 	execAction("WifiScanInfo", nil, buf, "list")

@@ -5,11 +5,13 @@ import (
 	"encoding/json"
 )
 
+// ContactPiece represents one contact info
 type ContactPiece struct {
 	Name   string `json:"name"`
 	Number string `json:"number"`
 }
 
+// ContactList gets all contact from the device
 func ContactList() ([]ContactPiece, error) {
 	buf := bytes.NewBuffer([]byte{})
 	exec(nil, buf, "ContactList", nil, "")

@@ -2,21 +2,29 @@ package termux
 
 import "bytes"
 
+// NotificationPriority enumerates the priority level of the notification
 type NotificationPriority string
 
 const (
-	Max     NotificationPriority = "max"
-	High    NotificationPriority = "high"
+	// Max notification priority
+	Max NotificationPriority = "max"
+	// High notification priority
+	High NotificationPriority = "high"
+	// Default notification priority
 	Default NotificationPriority = "default"
-	Low     NotificationPriority = "low"
-	Min     NotificationPriority = "min"
+	// Low notification priority
+	Low NotificationPriority = "low"
+	// Min notification priority
+	Min NotificationPriority = "min"
 )
 
+// NotificationButton represents a button shown in the notification bar
 type NotificationButton struct {
 	Text   string
 	Action string
 }
 
+// NotificationOpt represents the options of a notification
 type NotificationOpt struct {
 	Content  string
 	Sound    bool
@@ -35,6 +43,7 @@ type NotificationOpt struct {
 	Btn3         NotificationButton
 }
 
+// NotificationRemove removes the notification with the given id
 func NotificationRemove(id string) error {
 	buf := bytes.NewBuffer([]byte{})
 	exec(nil, buf, "NotificationRemove", map[string]interface{}{
@@ -43,6 +52,7 @@ func NotificationRemove(id string) error {
 	return checkErr(buf.Bytes())
 }
 
+// Notification creates a new notification with the given id and options
 func Notification(id string, opt NotificationOpt) error {
 	in := bytes.NewBuffer([]byte{})
 	out := bytes.NewBuffer([]byte{})

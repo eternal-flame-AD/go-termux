@@ -9,6 +9,7 @@ import (
 	"github.com/eternal-flame-AD/go-termux/internal/chanbuf"
 )
 
+// SensorList acquires a list of available sensors on the device
 func SensorList() ([]string, error) {
 	buf := bytes.NewBuffer([]byte{})
 	execAction("Sensor", nil, buf, "list")
@@ -26,12 +27,15 @@ func SensorList() ([]string, error) {
 	return l.Sensors, nil
 }
 
+// SensorWatchOpt represents the options to a Sensor call
 type SensorWatchOpt struct {
 	Limit      int
 	DelayMS    int
 	SensorList []string
 }
 
+// Sensor starts a sensor watch in a given context and options
+// returns raw data bytes encooded with JSON
 func Sensor(ctx context.Context, opt SensorWatchOpt) <-chan []byte {
 	response := make(chan []byte)
 	param := map[string]interface{}{}
@@ -46,7 +50,9 @@ func Sensor(ctx context.Context, opt SensorWatchOpt) <-chan []byte {
 	if opt.Limit != 0 {
 		param["limit"] = opt.Limit
 	}
-	execContext(ctx, nil, chanbuf.BufToChan{response}, "Sensor", param, "")
+	execContext(ctx, nil, chanbuf.BufToChan{
+		C: response,
+	}, "Sensor", param, "")
 
 	go func() {
 		defer execAction("Sensor", nil, bytes.NewBuffer([]byte{}), "cleanup")

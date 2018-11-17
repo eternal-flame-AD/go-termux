@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 )
 
+// CameraInfoPiece represent the info of one camera on the device
 type CameraInfoPiece struct {
 	ID              string `json:"id"`
 	Facing          string `json:"facing"`
@@ -21,6 +22,7 @@ type CameraInfoPiece struct {
 	Capabilities []string `json:"capabilities"`
 }
 
+// CameraInfo gets the information of available cameras on the device
 func CameraInfo() ([]CameraInfoPiece, error) {
 	buf := bytes.NewBuffer([]byte{})
 	exec(nil, buf, "CameraInfo", nil, "")

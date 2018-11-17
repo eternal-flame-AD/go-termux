@@ -6,6 +6,8 @@ import (
 	"path"
 )
 
+// TakePhoto uses the device camera to take a photo and save the result to outfile
+// cameraID is the id of the camera specified by the return of CameraInfo
 func TakePhoto(cameraID string, outfile string) error {
 	buf := bytes.NewBuffer([]byte{})
 	if !path.IsAbs(outfile) {

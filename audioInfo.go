@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 )
 
+// AudioInfoResponse represents the current audio stream status
 type AudioInfoResponse struct {
 	JavaOutputSampleRate       string `json:"PROPERTY_OUTPUT_SAMPLE_RATE"`
 	JavaOutputFramesPerBuffer  string `json:"PROPERTY_OUTPUT_FRAMES_PER_BUFFER"`
@@ -13,6 +14,7 @@ type AudioInfoResponse struct {
 	WiredHeadsetConnected      bool   `json:"WIREDHEADSET_IS_CONNECTED"`
 }
 
+// AudioInfo acquires the corrent audio info
 func AudioInfo() (*AudioInfoResponse, error) {
 	buf := bytes.NewBuffer([]byte{})
 	exec(nil, buf, "AudioInfo", nil, "")

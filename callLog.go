@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 )
 
+// CallLogPiece represents one piece of call log
 type CallLogPiece struct {
 	Name     string `json:"name"`
 	Number   string `json:"phone_number"`
@@ -13,6 +14,7 @@ type CallLogPiece struct {
 	Duration string `json:"duration"`
 }
 
+// CallLog acquires call logs with a given limit and offset
 func CallLog(limit int, offset int) ([]CallLogPiece, error) {
 	buf := bytes.NewBuffer([]byte{})
 	exec(nil, buf, "CallLog", map[string]interface{}{
