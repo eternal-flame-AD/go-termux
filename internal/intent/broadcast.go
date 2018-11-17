@@ -3,7 +3,6 @@ package intent
 import (
 	"bytes"
 	"context"
-	"fmt"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -103,7 +102,6 @@ func (c *Broadcast) Send(ctx context.Context) {
 			args = append(args, "--esa", key, t.String())
 		}
 	}
-	fmt.Println(args)
 	cmd := exec.CommandContext(ctx, "/data/data/com.termux/files/usr/bin/am", args...)
 	go cmd.Run()
 }
