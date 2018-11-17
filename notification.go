@@ -88,6 +88,8 @@ func Notification(id string, opt NotificationOpt) error {
 		param[key] = val
 	}
 
-	exec(in, out, "Notification", param, "")
+	if err := exec(in, out, "Notification", param, ""); err != nil {
+		return err
+	}
 	return checkErr(out.Bytes())
 }

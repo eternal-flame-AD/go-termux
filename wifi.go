@@ -32,7 +32,9 @@ type WifiConnection struct {
 // WifiConnectionState returns the current wifi connection state of the device
 func WifiConnectionState() (*WifiConnection, error) {
 	buf := bytes.NewBuffer([]byte{})
-	exec(nil, buf, "WifiConnectionInfo", nil, "")
+	if err := exec(nil, buf, "WifiConnectionInfo", nil, ""); err != nil {
+		return nil, err
+	}
 	res := buf.Bytes()
 	if err := checkErr(res); err != nil {
 		return nil, err

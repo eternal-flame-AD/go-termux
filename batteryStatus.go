@@ -17,7 +17,9 @@ type BatteryStatusResponse struct {
 // BatteryStatus acquires the corrent audio info
 func BatteryStatus() (*BatteryStatusResponse, error) {
 	buf := bytes.NewBuffer([]byte{})
-	exec(nil, buf, "BatteryStatus", nil, "")
+	if err := exec(nil, buf, "BatteryStatus", nil, ""); err != nil {
+		return nil, err
+	}
 	res := buf.Bytes()
 	if err := checkErr(res); err != nil {
 		return nil, err

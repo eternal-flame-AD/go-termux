@@ -17,10 +17,12 @@ func TakePhoto(cameraID string, outfile string) error {
 		}
 		outfile = path.Join(wd, outfile)
 	}
-	exec(nil, buf, "CameraPhoto", map[string]interface{}{
+	if err := exec(nil, buf, "CameraPhoto", map[string]interface{}{
 		"camera": cameraID,
 		"file":   outfile,
-	}, "")
+	}, ""); err != nil {
+		return err
+	}
 	res := buf.Bytes()
 	return checkErr(res)
 }

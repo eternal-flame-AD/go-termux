@@ -17,10 +17,12 @@ type CallLogPiece struct {
 // CallLog acquires call logs with a given limit and offset
 func CallLog(limit int, offset int) ([]CallLogPiece, error) {
 	buf := bytes.NewBuffer([]byte{})
-	exec(nil, buf, "CallLog", map[string]interface{}{
+	if err := exec(nil, buf, "CallLog", map[string]interface{}{
 		"limit":  limit,
 		"offset": offset,
-	}, "")
+	}, ""); err != nil {
+		return nil, err
+	}
 	res := buf.Bytes()
 	if err := checkErr(res); err != nil {
 		return nil, err

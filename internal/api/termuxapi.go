@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"strings"
+	"time"
 
 	"github.com/eternal-flame-AD/go-termux/internal/intent"
 
@@ -54,8 +55,16 @@ func (c *Call) Call(ctx context.Context) {
 	bc.Send(ctx)
 }
 
+func (c Call) SetReadDeadline(t time.Time) error {
+	return c.pipeToMe.SetReadDeadline(t)
+}
+
 func (c Call) Read(p []byte) (n int, err error) {
 	return c.pipeToMe.Read(p)
+}
+
+func (c Call) SetWriteDeadline(t time.Time) error {
+	return c.pipeToRemote.SetWriteDeadline(t)
 }
 
 func (c Call) Write(p []byte) (n int, err error) {

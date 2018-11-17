@@ -17,7 +17,9 @@ type AudioInfoResponse struct {
 // AudioInfo acquires the corrent audio info
 func AudioInfo() (*AudioInfoResponse, error) {
 	buf := bytes.NewBuffer([]byte{})
-	exec(nil, buf, "AudioInfo", nil, "")
+	if err := exec(nil, buf, "AudioInfo", nil, ""); err != nil {
+		return nil, err
+	}
 	res := buf.Bytes()
 	if err := checkErr(res); err != nil {
 		return nil, err

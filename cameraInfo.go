@@ -25,7 +25,9 @@ type CameraInfoPiece struct {
 // CameraInfo gets the information of available cameras on the device
 func CameraInfo() ([]CameraInfoPiece, error) {
 	buf := bytes.NewBuffer([]byte{})
-	exec(nil, buf, "CameraInfo", nil, "")
+	if err := exec(nil, buf, "CameraInfo", nil, ""); err != nil {
+		return nil, err
+	}
 	res := buf.Bytes()
 	if err := checkErr(res); err != nil {
 		return nil, err

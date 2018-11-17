@@ -34,10 +34,12 @@ type LocationRecord struct {
 
 func location(ctx context.Context, t string, provider LocationProvider) (*LocationRecord, error) {
 	buf := bytes.NewBuffer([]byte{})
-	execContext(ctx, nil, buf, "Location", map[string]interface{}{
+	if err := execContext(ctx, nil, buf, "Location", map[string]interface{}{
 		"provider": string(provider),
 		"request":  t,
-	}, "")
+	}, ""); err != nil {
+		return nil, err
+	}
 	res := buf.Bytes()
 	if err := checkErr(res); err != nil {
 		return nil, err
@@ -60,21 +62,23 @@ func Location(ctx context.Context, provider LocationProvider) (*LocationRecord, 
 }
 
 // UpdatedLocation acquires the real-time location of the device from a channel
-func UpdatedLocation(ctx context.Context, provider LocationProvider) <-chan struct {
+func UpdatedLocation(ctx context.Context, provider LocationProvider) (<-chan struct {
 	Location *LocationRecord
 	Error    error
-} {
+}, error) {
 	response := make(chan []byte)
-	go execContext(ctx, nil, chanbuf.BufToChan{
-		C: response,
-	}, "Location", map[string]interface{}{
-		"provider": string(provider),
-		"request":  "updates",
-	}, "")
 	ret := make(chan struct {
 		Location *LocationRecord
 		Error    error
 	})
+	if err := execContext(ctx, nil, chanbuf.BufToChan{
+		C: response,
+	}, "Location", map[string]interface{}{
+		"provider": string(provider),
+		"request":  "updates",
+	}, ""); err != nil {
+		return nil, err
+	}
 	go func() {
 		for {
 			select {
@@ -104,5 +108,5 @@ func UpdatedLocation(ctx context.Context, provider LocationProvider) <-chan stru
 			}
 		}
 	}()
-	return ret
+	return ret, nil
 }

@@ -7,7 +7,9 @@ import (
 // ClipboardGet gets the current content of the clipboard
 func ClipboardGet() (string, error) {
 	buf := bytes.NewBuffer([]byte{})
-	exec(nil, buf, "Clipboard", nil, "")
+	if err := exec(nil, buf, "Clipboard", nil, ""); err != nil {
+		return "", err
+	}
 	return buf.String(), nil
 }
 

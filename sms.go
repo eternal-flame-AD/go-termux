@@ -35,11 +35,13 @@ type SMS struct {
 // SMSList acquires a list of the received SMS in the given SMS box with a given limit and offset
 func SMSList(limit int, offset int, box SMSBoxType) ([]SMS, error) {
 	buf := bytes.NewBuffer([]byte{})
-	exec(nil, buf, "SmsInbox", map[string]interface{}{
+	if err := exec(nil, buf, "SmsInbox", map[string]interface{}{
 		"type":   box,
 		"limit":  limit,
 		"offset": offset,
-	}, "")
+	}, ""); err != nil {
+		return nil, err
+	}
 	res := buf.Bytes()
 	if err := checkErr(res); err != nil {
 		return nil, err
@@ -55,8 +57,10 @@ func SMSList(limit int, offset int, box SMSBoxType) ([]SMS, error) {
 func SMSSend(numbers []string, text string) error {
 	in := bytes.NewBufferString(text)
 	buf := bytes.NewBuffer([]byte{})
-	exec(in, buf, "SmsSend", map[string]interface{}{
+	if err := exec(in, buf, "SmsSend", map[string]interface{}{
 		"recipients": numbers,
-	}, "")
+	}, ""); err != nil {
+		return err
+	}
 	return checkErr(buf.Bytes())
 }

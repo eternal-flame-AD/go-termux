@@ -15,7 +15,9 @@ type AudioStreamState struct {
 // AudioStreams acquires all audio stream volume info from the device
 func AudioStreams() ([]AudioStreamState, error) {
 	buf := bytes.NewBuffer([]byte{})
-	exec(nil, buf, "Volume", nil, "")
+	if err := exec(nil, buf, "Volume", nil, ""); err != nil {
+		return nil, err
+	}
 	res := buf.Bytes()
 
 	if err := checkErr(res); res != nil {
@@ -31,9 +33,11 @@ func AudioStreams() ([]AudioStreamState, error) {
 // AudioStreamVolume sets the volume of a given audio stream name
 func AudioStreamVolume(name string, volume int) error {
 	buf := bytes.NewBuffer([]byte{})
-	exec(nil, buf, "Volume", map[string]interface{}{
+	if err := exec(nil, buf, "Volume", map[string]interface{}{
 		"stream": name,
 		"volume": volume,
-	}, "")
+	}, ""); err != nil {
+		return err
+	}
 	return checkErr(buf.Bytes())
 }

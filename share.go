@@ -39,7 +39,9 @@ func ShareFile(title string, path string, useDefault bool, actionType ShareType)
 	}
 	param["file"] = realpath
 
-	exec(nil, buf, "Share", param, "")
+	if err := exec(nil, buf, "Share", param, ""); err != nil {
+		return err
+	}
 	return checkErr(buf.Bytes())
 }
 
@@ -53,6 +55,8 @@ func Share(title string, data []byte, contentType string, useDefault bool, actio
 
 	in := bytes.NewBuffer(data)
 	buf := bytes.NewBuffer([]byte{})
-	exec(in, buf, "Share", param, "")
+	if err := exec(in, buf, "Share", param, ""); err != nil {
+		return err
+	}
 	return checkErr(buf.Bytes())
 }

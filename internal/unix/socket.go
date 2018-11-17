@@ -2,6 +2,7 @@ package unix
 
 import (
 	"net"
+	"time"
 
 	"github.com/twinj/uuid"
 )
@@ -34,6 +35,14 @@ func (c *Socket) connect() {
 		panic(err)
 	}
 	c.underlyingConn = conn.(*net.UnixConn)
+}
+
+func (c *Socket) SetReadDeadline(t time.Time) error {
+	return c.underlyingConn.SetReadDeadline(t)
+}
+
+func (c *Socket) SetWriteDeadline(t time.Time) error {
+	return c.underlyingConn.SetWriteDeadline(t)
 }
 
 func (c *Socket) Read(p []byte) (n int, err error) {

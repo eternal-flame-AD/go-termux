@@ -12,7 +12,9 @@ import (
 // SensorList acquires a list of available sensors on the device
 func SensorList() ([]string, error) {
 	buf := bytes.NewBuffer([]byte{})
-	execAction("Sensor", nil, buf, "list")
+	if err := execAction("Sensor", nil, buf, "list"); err != nil {
+		return nil, err
+	}
 	res := buf.Bytes()
 
 	if err := checkErr(res); res != nil {
@@ -36,7 +38,7 @@ type SensorWatchOpt struct {
 
 // Sensor starts a sensor watch in a given context and options
 // returns raw data bytes encooded with JSON
-func Sensor(ctx context.Context, opt SensorWatchOpt) <-chan []byte {
+func Sensor(ctx context.Context, opt SensorWatchOpt) (<-chan []byte, error) {
 	response := make(chan []byte)
 	param := map[string]interface{}{}
 	if opt.SensorList == nil {
@@ -50,9 +52,11 @@ func Sensor(ctx context.Context, opt SensorWatchOpt) <-chan []byte {
 	if opt.Limit != 0 {
 		param["limit"] = opt.Limit
 	}
-	execContext(ctx, nil, chanbuf.BufToChan{
+	if err := execContext(ctx, nil, chanbuf.BufToChan{
 		C: response,
-	}, "Sensor", param, "")
+	}, "Sensor", param, ""); err != nil {
+		return nil, err
+	}
 
 	go func() {
 		defer execAction("Sensor", nil, bytes.NewBuffer([]byte{}), "cleanup")
@@ -64,5 +68,5 @@ func Sensor(ctx context.Context, opt SensorWatchOpt) <-chan []byte {
 		}
 	}()
 
-	return response
+	return response, nil
 }

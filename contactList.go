@@ -14,7 +14,9 @@ type ContactPiece struct {
 // ContactList gets all contact from the device
 func ContactList() ([]ContactPiece, error) {
 	buf := bytes.NewBuffer([]byte{})
-	exec(nil, buf, "ContactList", nil, "")
+	if err := exec(nil, buf, "ContactList", nil, ""); err != nil {
+		return nil, err
+	}
 	res := buf.Bytes()
 	if err := checkErr(res); err != nil {
 		return nil, err
