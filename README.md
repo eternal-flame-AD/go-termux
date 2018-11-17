@@ -1,6 +1,6 @@
 # go-termux
 
-[![API Documentation](https://img.shields.io/badge/api-GoDoc-blue.svg?style=flat-square)](https://godoc.org/github.com/xconstruct/go-termux)
+[![API Documentation](https://img.shields.io/badge/api-GoDoc-blue.svg?style=flat-square)](https://godoc.org/github.com/eternal-flame-AD/go-termux)
 
 Golang wrapper for termux:API. This package calls termux:API methods directly so that this package would work without termux-api package installed.
 
