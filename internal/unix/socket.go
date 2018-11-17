@@ -1,6 +1,7 @@
 package unix
 
 import (
+	"errors"
 	"net"
 	"time"
 
@@ -37,11 +38,37 @@ func (c *Socket) connect() {
 	c.underlyingConn = conn.(*net.UnixConn)
 }
 
+func (c *Socket) connectDeadline(t time.Time) error {
+	timeout := time.NewTimer(t.Sub(time.Now()))
+	done := make(chan struct{})
+	go func() {
+		c.connect()
+		close(done)
+	}()
+	defer timeout.Stop()
+	select {
+	case <-timeout.C:
+		return errors.New("Connect timeout")
+	case <-done:
+		return nil
+	}
+}
+
 func (c *Socket) SetReadDeadline(t time.Time) error {
+	if c.underlyingConn == nil {
+		if err := c.connectDeadline(t); err != nil {
+			return err
+		}
+	}
 	return c.underlyingConn.SetReadDeadline(t)
 }
 
 func (c *Socket) SetWriteDeadline(t time.Time) error {
+	if c.underlyingConn == nil {
+		if err := c.connectDeadline(t); err != nil {
+			return err
+		}
+	}
 	return c.underlyingConn.SetWriteDeadline(t)
 }
 
