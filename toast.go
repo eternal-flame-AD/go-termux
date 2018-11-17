@@ -24,13 +24,22 @@ type ToastOption struct {
 
 // Toast creates a toast on the device
 func Toast(text string, opts ToastOption) error {
+	in := bytes.NewBufferString(text)
 	buf := bytes.NewBuffer([]byte{})
-	if err := exec(nil, buf, "Toast", map[string]interface{}{
-		"text_color": opts.FontColor,
-		"background": opts.BGColor,
-		"short":      opts.Short,
-		"gravity":    string(opts.Position),
-	}, ""); err != nil {
+	params := map[string]interface{}{}
+	if opts.FontColor != "" {
+		params["text_color"] = opts.FontColor
+	}
+	if opts.BGColor != "" {
+		params["background"] = opts.BGColor
+	}
+	if opts.Short {
+		params["short"] = true
+	}
+	if opts.Position != "" {
+		params["gravity"] = string(opts.Position)
+	}
+	if err := exec(in, buf, "Toast", params, ""); err != nil {
 		return err
 	}
 	return checkErr(buf.Bytes())
