@@ -61,10 +61,10 @@ type WifiAP struct {
 // WifiScan scans for available networks
 func WifiScan() ([]WifiAP, error) {
 	buf := bytes.NewBuffer([]byte{})
-	execAction("WifiScanInfo", nil, buf, "list")
+	execAction("WifiScanInfo", nil, buf, "list", nil)
 	res := buf.Bytes()
 
-	if err := checkErr(res); res != nil {
+	if err := checkErr(res); err != nil {
 		return nil, err
 	}
 	l := make([]WifiAP, 0)

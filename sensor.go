@@ -12,12 +12,12 @@ import (
 // SensorList acquires a list of available sensors on the device
 func SensorList() ([]string, error) {
 	buf := bytes.NewBuffer([]byte{})
-	if err := execAction("Sensor", nil, buf, "list"); err != nil {
+	if err := execAction("Sensor", nil, buf, "list", nil); err != nil {
 		return nil, err
 	}
 	res := buf.Bytes()
 
-	if err := checkErr(res); res != nil {
+	if err := checkErr(res); err != nil {
 		return nil, err
 	}
 	l := new(struct {
@@ -59,7 +59,7 @@ func Sensor(ctx context.Context, opt SensorWatchOpt) (<-chan []byte, error) {
 	}
 
 	go func() {
-		defer execAction("Sensor", nil, bytes.NewBuffer([]byte{}), "cleanup")
+		defer execAction("Sensor", nil, bytes.NewBuffer([]byte{}), "cleanup", nil)
 		for {
 			select {
 			case <-ctx.Done():
