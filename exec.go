@@ -57,16 +57,17 @@ func pipe(ctx context.Context, ai io.Reader, ao io.Writer, bi io.Reader, bo io.W
 	return
 }
 
-func execAction(method string, stdin io.Reader, stdout io.Writer, action string) error {
+func execAction(method string, stdin io.Reader, stdout io.Writer, action string, args map[string]interface{}) error {
 	ctx, cancel := context.WithTimeout(context.Background(), GlobalTimeout)
 	defer cancel()
-	return execActionContext(ctx, stdin, stdout, method, action)
+	return execActionContext(ctx, stdin, stdout, method, action, args)
 }
 
-func execActionContext(ctx context.Context, stdin io.Reader, stdout io.Writer, method string, action string) error {
+func execActionContext(ctx context.Context, stdin io.Reader, stdout io.Writer, method string, action string, args map[string]interface{}) error {
 	call := api.Call{
 		Method: method,
 		Action: action,
+		Args:   args,
 	}
 
 	call.Call(ctx)
