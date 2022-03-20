@@ -7,7 +7,7 @@ import (
 	"path"
 )
 
-// RecordInfo rapresent the current state of recording process
+// RecordInfo represent the current state of recording process
 type RecordInfo struct {
 	IsRecording bool   `json:"isRecording"`
 	OutputFile  string `json:"outputFile"`
