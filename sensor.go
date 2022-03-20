@@ -17,7 +17,7 @@ func SensorList() ([]string, error) {
 	}
 	res := buf.Bytes()
 
-	if err := checkErr(res); res != nil {
+	if err := checkErr(res); err != nil {
 		return nil, err
 	}
 	l := new(struct {

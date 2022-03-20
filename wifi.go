@@ -64,7 +64,7 @@ func WifiScan() ([]WifiAP, error) {
 	execAction("WifiScanInfo", nil, buf, "list")
 	res := buf.Bytes()
 
-	if err := checkErr(res); res != nil {
+	if err := checkErr(res); err != nil {
 		return nil, err
 	}
 	l := make([]WifiAP, 0)
